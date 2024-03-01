@@ -8,6 +8,7 @@ const Command = require('../command.js');
 
 describe("Rover class", function() {
   let testRover = new Rover(1234);
+
   describe("basic object checks", function() {
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
     let message = new Message ('i am a name', commands);
@@ -29,25 +30,29 @@ describe("Rover class", function() {
   })
 
   describe("Command checks", function() {
-    let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
-    let message = new Message ('i am a name', commands);
-    let response = testRover.receiveMessage(message);
-    
+
     it('responds correctly to the status check command', function() {
-    
+    let commands = [new Command('STATUS_CHECK')];
+    let message = new Message ('check-yourself', commands);
+    let response = testRover.receiveMessage(message)
+
+    expect(response.completed).toBe(true);
+    expect(response.roverStatus.mode).toContain('NORMAL')
+    expect(response.roverStatus.generatorWatts).toBe(110)
+    expect(response.roverStatus.position).toContain(1234)
     })
     
-    it('responds correctly to the mode change command', function() {
+    // it('responds correctly to the mode change command', function() {
   
-    })
+    // })
     
-    it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
+    // it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
   
-    })
+    // })
     
-    it('responds with the position for the move command', function() {
+    // it('responds with the position for the move command', function() {
   
-    })
+    // })
     
   })
 

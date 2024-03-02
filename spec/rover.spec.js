@@ -40,10 +40,10 @@ describe("Rover class", function() {
     let message = new Message ('check-yourself', commands);
     let response = testRover.receiveMessage(message)
 
-    expect(response.completed).toBe(true);
-    expect(response.roverStatus.mode).toContain('NORMAL')
-    expect(response.roverStatus.generatorWatts).toBe(110)
-    expect(response.roverStatus.position).toContain(1234)
+    expect(response.results[0].completed).toBe(true);
+    expect(response.results[0].mode).toContain('NORMAL')
+    expect(response.results[0].generatorWatts).toBe(110)
+    expect(response.results[0].position).toBe(1000)
     })
     
     // it('responds correctly to the mode change command', function() {

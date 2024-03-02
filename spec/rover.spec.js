@@ -7,15 +7,19 @@ const Command = require('../command.js');
 
 
 describe("Rover class", function() {
-  let testRover = new Rover(1234);
+  let testPosition = 1000
+  let testRover = new Rover(testPosition);
+ 
+  // keeping sets of tests in different scopes
 
   describe("basic object checks", function() {
+    // an array of two commands from Command class, used to create a Message, then sent as an argument in the call to recceiveMessage
     let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
-    let message = new Message ('i am a name', commands);
+    let message = new Message ('messageName', commands);
     let response = testRover.receiveMessage(message);
 
     it('constructor sets position and default values for mode and generatorWatts', function() {
-      expect(testRover.position).toBe(1234);
+      expect(testRover.position).toBe(testPosition);
       expect(testRover.mode).toBe('NORMAL');
       expect(testRover.generatorWatts).toBe(110)
     })

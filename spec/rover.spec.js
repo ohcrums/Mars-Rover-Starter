@@ -8,8 +8,8 @@ const Command = require('../command.js');
 
 describe("Rover class", function() {
 
-  // keeping sets of tests in different scopes
-  describe("basic object checks", function() {
+  // keeping sets of tests in different describes for clarity
+  describe("basic checks", function() {
 
     it('constructor sets position and default values for mode and generatorWatts', function() {
       let testPosition = 1000
@@ -59,18 +59,26 @@ describe("Rover class", function() {
     })
     
     it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
-      let stillCommands = [new Command('MODE_CHANGE', 'LOW_POWER')];
-      let stillMessage = new Message ('lose charge', stillCommands);
+      let stillCommands = [new Command('MODE_CHANGE', 'LOW_POWER') , new Command('MOVE', 2000)];
+      let stillMessage = new Message ('stay still', stillCommands);
       let samePosition = 1000;
       let stillRover = new Rover(samePosition);
       let stillResponse = stillRover.receiveMessage(stillMessage);
 
-      expect(stillResponse.results[0].completed).toBe(false);
+      expect(stillResponse.results[1].completed).toBe(false);
       expect(stillRover.position).toBe(samePosition);
     })
     
     it('responds with the position for the move command', function() {
-  
+      let startPosition = 1000;
+      let newPosition = 2000;
+      let moveRover = new Rover(startPosition);
+      let moveCommands = [new Command('MOVE', newPosition)];
+      let moveMessage = new Message ('get moving', moveCommands);
+      let moveResponse = moveRover.receiveMessage(moveMessage);
+
+      expect(moveResponse.results[0].completed).toBe(true);
+      expect(moveRover.position).toBe(newPosition); 
     })
     
   })

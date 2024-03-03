@@ -22,8 +22,13 @@ class Rover {
          if ( message.commands[0].commandType == 'MOVE' ) {
            let moveObj = {
              message: 'MOVE',
-             completed: true
            };
+           if (this.mode === 'LOW_POWER') {
+             moveObj.completed = false;
+           } else if (this.mode === 'NORMAL') {
+             moveObj.completed = true;
+             this.position = message.commands[0].value;
+           }
            responder.results.push(moveObj);
            message.commands.splice([0], 1)
  
@@ -54,5 +59,4 @@ class Rover {
      return responder;
    }
  }
- 
 module.exports = Rover;

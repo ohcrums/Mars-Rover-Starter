@@ -7,56 +7,64 @@ const Command = require('../command.js');
 
 
 describe("Rover class", function() {
-  let testPosition = 1000
-  let testRover = new Rover(testPosition);
- 
-  // keeping sets of tests in different scopes
 
+  // keeping sets of tests in different scopes
   describe("basic object checks", function() {
-    // an array of two commands from Command class, used to create a Message, then sent as an argument in the call to recceiveMessage
-    let commands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
-    let message = new Message ('messageName', commands);
-    let response = testRover.receiveMessage(message);
 
     it('constructor sets position and default values for mode and generatorWatts', function() {
-      expect(testRover.position).toBe(testPosition);
-      expect(testRover.mode).toBe('NORMAL');
-      expect(testRover.generatorWatts).toBe(110)
+      let testPosition = 1000
+      let geoRover = new Rover(testPosition);
+      expect(geoRover.position).toBe(testPosition);
+      expect(geoRover.mode).toBe('NORMAL');
+      expect(geoRover.generatorWatts).toBe(110)
     })
 
     it('response returned by receiveMessage contains the name of the message', function() {
-      expect(response.message).toContain(message.name);
+      let statusCommands = [new Command('STATUS_CHECK')];
+      let statusMessage = new Message ('check-yourself', statusCommands);
+      let nameRover = new Rover(1000);
+      let nameResponse = nameRover.receiveMessage(statusMessage);
+      expect(nameResponse.message).toContain(statusMessage.name);
     })
 
     it('response returned by receiveMessage includes two results if two commands are sent in the message', function() {
-      expect(response.results.length).toBe(2);
+      let multiCommands = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
+      let multiMessage = new Message ('messageName', multiCommands);
+      let messRover = new Rover(1000);
+      let messResponse = messRover.receiveMessage(multiMessage);
+      expect(messResponse.results.length).toBe(2);
     })
   })
 
   describe("Command checks", function() {
+    let statusCommands = [new Command('STATUS_CHECK')];
+    let statusMessage = new Message ('check-yourself', statusCommands);
+    let modeCommands = [new Command('MODE_CHANGE', 'LOW_POWER')];
+    let modeMessage = new Message ('lose charge', modeCommands);
 
     it('responds correctly to the status check command', function() {
-    let commands = [new Command('STATUS_CHECK')];
-    let message = new Message ('check-yourself', commands);
-    let response = testRover.receiveMessage(message)
-
-    expect(response.results[0].completed).toBe(true);
-    expect(response.results[0].mode).toContain('NORMAL')
-    expect(response.results[0].generatorWatts).toBe(110)
-    expect(response.results[0].position).toBe(1000)
+      let statusRover = new Rover(1000);
+      let statusResponse = statusRover.receiveMessage(statusMessage);
+      expect(statusResponse.results[0].completed).toBe(true);;
+      expect(statusResponse.results[0].mode).toContain('NORMAL');
+      expect(statusResponse.results[0].generatorWatts).toBe(110);
+      expect(statusResponse.results[0].position).toBe(1000);
     })
     
-    // it('responds correctly to the mode change command', function() {
-  
-    // })
+    it('responds correctly to the mode change command', function() {
+      let modeRover = new Rover(1000);
+      let statusResponse = modeRover.receiveMessage(statusMessage);
+      let modeResponse = modeRover.receiveMessage(modeMessage);
+      expect(modeRover.mode).toContain('LOW_POWER')
+    })
     
-    // it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
+    it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
   
-    // })
+    })
     
-    // it('responds with the position for the move command', function() {
+    it('responds with the position for the move command', function() {
   
-    // })
+    })
     
   })
 

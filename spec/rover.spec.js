@@ -37,12 +37,10 @@ describe("Rover class", function() {
   })
 
   describe("Command checks", function() {
-    let statusCommands = [new Command('STATUS_CHECK')];
-    let statusMessage = new Message ('check-yourself', statusCommands);
-    let modeCommands = [new Command('MODE_CHANGE', 'LOW_POWER')];
-    let modeMessage = new Message ('lose charge', modeCommands);
 
     it('responds correctly to the status check command', function() {
+      let statusCommands = [new Command('STATUS_CHECK')];
+      let statusMessage = new Message ('check-yourself', statusCommands);
       let statusRover = new Rover(1000);
       let statusResponse = statusRover.receiveMessage(statusMessage);
       expect(statusResponse.results[0].completed).toBe(true);;
@@ -52,8 +50,9 @@ describe("Rover class", function() {
     })
     
     it('responds correctly to the mode change command', function() {
+      let modeCommands = [new Command('MODE_CHANGE', 'LOW_POWER')];
+      let modeMessage = new Message ('lose charge', modeCommands);
       let modeRover = new Rover(1000);
-      let statusResponse = modeRover.receiveMessage(statusMessage);
       let modeResponse = modeRover.receiveMessage(modeMessage);
       expect(modeResponse.results[0].completed).toBe(true)
       expect(modeRover.mode).toContain('LOW_POWER')

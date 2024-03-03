@@ -1,7 +1,5 @@
 class Rover {
-   // Write code here!
  
-   // position is a number representing current position, required for construction
    constructor(position) {
       this.position = position;
       if (!position) {
@@ -13,50 +11,57 @@ class Rover {
    }
    // function handles updates to rover object properties, takes Message object as argument
    receiveMessage(message) {
-     let responder = {
-       message: message.name,
-       results: []
-     }
-     while (message.commands.length > 0) {
- 
+      // declare output variable and initialize basic structure
+      let responder = {
+         message: message.name,
+         results: []
+      }
+
+      // I handled multiple commands by splicing whatever command has been completed
+      // break from while loop when there are none left
+      while (message.commands.length > 0) {
+         // series of if.else statements to catch command
          if ( message.commands[0].commandType == 'MOVE' ) {
-           let moveObj = {
-             message: 'MOVE',
-           };
-           if (this.mode === 'LOW_POWER') {
-             moveObj.completed = false;
-           } else if (this.mode === 'NORMAL') {
-             moveObj.completed = true;
-             this.position = message.commands[0].value;
-           }
-           responder.results.push(moveObj);
-           message.commands.splice([0], 1)
+            // create an object for the command 
+            let moveObj = {};
+            
+            if (this.mode === 'LOW_POWER') {
+               moveObj.completed = false;
+            } else if (this.mode === 'NORMAL') {
+               moveObj.completed = true;
+               // position updated to command value
+               this.position = message.commands[0].value;
+            }
+            // push command object into results array, and splice away the command
+            responder.results.push(moveObj);
+            message.commands.splice([0], 1)
  
          } else if ( message.commands[0].commandType == 'STATUS_CHECK' ) {
-           let statObj = {
-             command: 'STATUS_CHECK',
-             completed: true,
-             mode: this.mode,
-             generatorWatts: this.generatorWatts,
-             position: this.position
-           };
-           responder.results.push(statObj);
-           message.commands.splice([0], 1)
- 
+            let statObj = {
+               completed: true,
+            };
+
+            // adding in this way so that it's properly nested to pass tests
+            statObj.roverStatus = {
+               mode: this.mode,
+               generatorWatts: this.generatorWatts,
+               position: this.position
+            }
+            responder.results.push(statObj);
+            message.commands.splice([0], 1)
+
          } else if ( message.commands[0].commandType == 'MODE_CHANGE' ) {
-           this.mode = message.commands[0].value
-           let modeObj = {
-             message: 'MODE_CHANGE',
-             completed: true
-           };
-           responder.results.push(modeObj);
-           message.commands.splice([0], 1)
- 
+            // mode updated to command value
+            this.mode = message.commands[0].value
+            let modeObj = {
+               completed: true
+            };
+            responder.results.push(modeObj);
+            message.commands.splice([0], 1)
          }
-      
-       }
-      
-     return responder;
+      }
+      return responder;
    }
- }
+}
+
 module.exports = Rover;

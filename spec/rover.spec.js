@@ -44,9 +44,9 @@ describe("Rover class", function() {
       let statusRover = new Rover(1000);
       let statusResponse = statusRover.receiveMessage(statusMessage);
       expect(statusResponse.results[0].completed).toBe(true);;
-      expect(statusResponse.results[0].mode).toContain('NORMAL');
-      expect(statusResponse.results[0].generatorWatts).toBe(110);
-      expect(statusResponse.results[0].position).toBe(1000);
+      expect(statusResponse.results[0].roverStatus.mode).toContain('NORMAL');
+      expect(statusResponse.results[0].roverStatus.generatorWatts).toBe(110);
+      expect(statusResponse.results[0].roverStatus.position).toBe(1000);
     })
     
     it('responds correctly to the mode change command', function() {

@@ -55,6 +55,7 @@ describe("Rover class", function() {
       let modeRover = new Rover(1000);
       let statusResponse = modeRover.receiveMessage(statusMessage);
       let modeResponse = modeRover.receiveMessage(modeMessage);
+      expect(modeResponse.results[0].completed).toBe(true)
       expect(modeRover.mode).toContain('LOW_POWER')
     })
     

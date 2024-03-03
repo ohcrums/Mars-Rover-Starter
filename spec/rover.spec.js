@@ -59,7 +59,14 @@ describe("Rover class", function() {
     })
     
     it('responds with a false completed value when attempting to move in LOW_POWER mode', function() {
-  
+      let stillCommands = [new Command('MODE_CHANGE', 'LOW_POWER')];
+      let stillMessage = new Message ('lose charge', stillCommands);
+      let samePosition = 1000;
+      let stillRover = new Rover(samePosition);
+      let stillResponse = stillRover.receiveMessage(stillMessage);
+
+      expect(stillResponse.results[0].completed).toBe(false);
+      expect(stillRover.position).toBe(samePosition);
     })
     
     it('responds with the position for the move command', function() {
